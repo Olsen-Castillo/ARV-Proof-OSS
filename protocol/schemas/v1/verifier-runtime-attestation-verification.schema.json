@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://arv.example/schemas/arv-v1/verifier-runtime-attestation-verification.schema.json",
+  "title": "ARV Verifier Runtime Attestation Verification V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "schema_version", "accepted", "quarantined", "state", "operation", "runtime_verification_state", "policy_hash", "activation_pin_hash", "runtime_measurement_hash", "security_event_chain_hash", "attestation_hash", "current_attestation_pin_hash", "commit_precondition_hash", "next_attestation_pin_hash", "next_attestation_pin", "valid_attestation_signatures", "codes", "runtime_integrity_authority", "attestation_authority", "security_event_authority", "operating_system_authority", "collector_authority", "storage_authority", "transport_authority", "material_truth"],
+  "properties": {
+    "schema": {"const": "arv.verifier-runtime-attestation-verification"}, "schema_version": {"const": 1},
+    "accepted": {"type": "boolean"}, "quarantined": {"type": "boolean"},
+    "state": {"type": "string"}, "operation": {"enum": ["NONE", "BOOTSTRAP", "UPDATE", "REPLAY"]},
+    "runtime_verification_state": {"type": ["string", "null"]},
+    "policy_hash": {"$ref": "#/$defs/nullableDigest"}, "activation_pin_hash": {"$ref": "#/$defs/nullableDigest"}, "runtime_measurement_hash": {"$ref": "#/$defs/nullableDigest"},
+    "security_event_chain_hash": {"$ref": "#/$defs/nullableDigest"}, "attestation_hash": {"$ref": "#/$defs/nullableDigest"}, "current_attestation_pin_hash": {"$ref": "#/$defs/nullableDigest"}, "commit_precondition_hash": {"$ref": "#/$defs/nullableDigest"}, "next_attestation_pin_hash": {"$ref": "#/$defs/nullableDigest"},
+    "next_attestation_pin": {"oneOf": [{"$ref": "verifier-runtime-attestation-pin.schema.json"}, {"type": "null"}]},
+    "valid_attestation_signatures": {"type": "integer", "minimum": 0}, "codes": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+    "runtime_integrity_authority": {"const": "VERIFIED_RUNTIME"}, "attestation_authority": {"const": "ROOT_AUTHORIZED_RUNTIME_ATTESTOR_QUORUM"},
+    "security_event_authority": {"const": "HASH_CHAINED_OBSERVATION_ONLY"}, "operating_system_authority": {"const": "NONE"}, "collector_authority": {"const": "NONE"}, "storage_authority": {"const": "NONE"}, "transport_authority": {"const": "NONE"}, "material_truth": {"const": "NOT_EVALUATED"}
+  },
+  "$defs": {"digest": {"type": "string", "pattern": "^[a-f0-9]{64}$"}, "nullableDigest": {"oneOf": [{"$ref": "#/$defs/digest"}, {"type": "null"}]}}
+}

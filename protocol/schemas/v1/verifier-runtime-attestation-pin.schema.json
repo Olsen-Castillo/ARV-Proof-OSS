@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://arv.example/schemas/arv-v1/verifier-runtime-attestation-pin.schema.json",
+  "title": "ARV Verifier Runtime Attestation Pin V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "schema_version", "pin_id", "verifier_id", "instance_id", "generation", "attestation_sequence", "attestation_hash", "security_event_chain_hash", "last_event_sequence", "last_event_hash", "activation_pin_hash", "runtime_measurement_hash", "issued_at", "previous_pin_hash"],
+  "properties": {
+    "schema": {"const": "arv.verifier-runtime-attestation-pin"}, "schema_version": {"const": 1},
+    "pin_id": {"type": "string", "pattern": "^ARV-VERIFIER-RUNTIME-ATTESTATION-PIN-[A-Z0-9-]+$"},
+    "verifier_id": {"type": "string", "pattern": "^ARV-VERIFIER-[A-Z0-9-]+$"}, "instance_id": {"type": "string", "pattern": "^ARV-VERIFIER-INSTANCE-[A-Z0-9-]+$"},
+    "generation": {"type": "integer", "minimum": 1}, "attestation_sequence": {"type": "integer", "minimum": 1},
+    "attestation_hash": {"$ref": "#/$defs/digest"}, "security_event_chain_hash": {"$ref": "#/$defs/digest"},
+    "last_event_sequence": {"type": "integer", "minimum": 1}, "last_event_hash": {"$ref": "#/$defs/digest"},
+    "activation_pin_hash": {"$ref": "#/$defs/digest"}, "runtime_measurement_hash": {"$ref": "#/$defs/digest"},
+    "issued_at": {"type": "string", "format": "date-time"}, "previous_pin_hash": {"oneOf": [{"$ref": "#/$defs/digest"}, {"type": "null"}]}
+  },
+  "$defs": {"digest": {"type": "string", "pattern": "^[a-f0-9]{64}$"}}
+}

@@ -1,0 +1,92 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://raw.githubusercontent.com/Olsen-Castillo/ARV-Proof-OSS/main/protocol/schemas/v1/evidence-emission-request.schema.json",
+  "title": "ARV Evidence Emission Request V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["source_file_path", "profile", "artifact", "assertion"],
+  "properties": {
+    "source_file_path": { "type": "string", "minLength": 1 },
+    "profile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "version", "claims"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^arv\\.profile\\.[a-z0-9.-]+\\.v[1-9][0-9]*$"
+        },
+        "version": { "type": "integer", "minimum": 1 },
+        "claims": { "type": "object" }
+      }
+    },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "media_type"],
+      "properties": {
+        "kind": {
+          "enum": [
+            "DOCUMENT",
+            "IMAGE",
+            "VIDEO",
+            "AUDIO",
+            "DATASET",
+            "SOFTWARE",
+            "ARCHIVE",
+            "BINARY",
+            "OTHER"
+          ]
+        },
+        "media_type": { "type": "string", "minLength": 1 },
+        "name": { "type": "string", "minLength": 1 }
+      }
+    },
+    "assertion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "asserted_by", "participants", "attributes"],
+      "properties": {
+        "type": { "type": "string", "pattern": "^[A-Z][A-Z0-9_]*$" },
+        "asserted_by": { "$ref": "#/definitions/entity" },
+        "subject": { "$ref": "#/definitions/entity" },
+        "participants": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["role", "entity"],
+            "properties": {
+              "role": { "type": "string", "pattern": "^[A-Z][A-Z0-9_]*$" },
+              "entity": { "$ref": "#/definitions/entity" }
+            }
+          }
+        },
+        "occurred_at": { "type": "string", "format": "date-time" },
+        "jurisdiction": { "type": "string", "minLength": 1 },
+        "attributes": { "type": "object" }
+      }
+    },
+    "authority": { "type": "string", "minLength": 1 },
+    "system": { "type": "string", "minLength": 1 },
+    "canon": { "type": "string", "minLength": 1 },
+    "base_url": { "type": "string", "format": "uri" }
+  },
+  "definitions": {
+    "entity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type"],
+      "properties": {
+        "type": { "enum": ["PERSON", "ORGANIZATION", "SYSTEM", "UNKNOWN"] },
+        "name": { "type": "string", "minLength": 1 },
+        "identifier": { "type": "string", "minLength": 1 }
+      },
+      "anyOf": [
+        { "required": ["name"] },
+        { "required": ["identifier"] },
+        { "properties": { "type": { "const": "UNKNOWN" } } }
+      ]
+    }
+  }
+}

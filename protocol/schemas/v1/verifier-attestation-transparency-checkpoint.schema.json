@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://arv.example/schemas/arv-v1/verifier-attestation-transparency-checkpoint.schema.json",
+  "title": "ARV Verifier Attestation Transparency Checkpoint V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "schema_version", "checkpoint_id", "log_id", "checkpoint_sequence", "tree_size", "root_hash", "policy_id", "policy_version", "policy_hash", "issued_at", "previous_checkpoint_hash", "signatures"],
+  "properties": {
+    "schema": {"const": "arv.verifier-attestation-transparency-checkpoint"},
+    "schema_version": {"const": 1},
+    "checkpoint_id": {"type": "string", "pattern": "^ARV-ATTESTATION-TRANSPARENCY-CHECKPOINT-[A-Z0-9-]+$"},
+    "log_id": {"type": "string", "pattern": "^ARV-ATTESTATION-TRANSPARENCY-LOG-[A-Z0-9-]+$"},
+    "checkpoint_sequence": {"type": "integer", "minimum": 1},
+    "tree_size": {"type": "integer", "minimum": 1},
+    "root_hash": {"$ref": "#/$defs/digest"},
+    "policy_id": {"type": "string", "pattern": "^ARV-ATTESTATION-TRANSPARENCY-POLICY-[A-Z0-9-]+$"},
+    "policy_version": {"type": "integer", "minimum": 1},
+    "policy_hash": {"$ref": "#/$defs/digest"},
+    "issued_at": {"type": "string", "format": "date-time"},
+    "previous_checkpoint_hash": {"oneOf": [{"$ref": "#/$defs/digest"}, {"type": "null"}]},
+    "signatures": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/signature"}}
+  },
+  "$defs": {
+    "digest": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "signature": {"type": "object", "additionalProperties": false, "required": ["algorithm", "key_id", "signature_base64"], "properties": {
+      "algorithm": {"const": "Ed25519"}, "key_id": {"type": "string", "pattern": "^[a-f0-9]{24,128}$"}, "signature_base64": {"type": "string", "contentEncoding": "base64"}
+    }}
+  }
+}

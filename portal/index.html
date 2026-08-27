@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ARV Proof OSS - Local Proof Demo</title>
+  <meta name="description" content="Local artifact digest comparison for ARV Portable Proof Manifest V1.">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <main class="shell">
+    <header class="hero">
+      <p class="eyebrow">ARV Proof OSS · v0.2.1</p>
+      <h1>Portable proof, inspected locally.</h1>
+      <p class="lead">Load a Portable Proof Manifest and an artifact. The browser computes SHA-256 locally and compares it with the digest disclosed by the manifest.</p>
+      <div class="boundary">No upload · No network request · No officiality claim · No material-truth claim</div>
+    </header>
+
+    <section class="grid">
+      <article class="card">
+        <h2>1. Portable manifest</h2>
+        <p>Select a <code>arv.portable-proof-manifest</code> JSON file.</p>
+        <label class="file-button">
+          <span>Select manifest</span>
+          <input id="manifestFile" type="file" accept="application/json,.json">
+        </label>
+        <p id="manifestStatus" class="status">No manifest loaded.</p>
+      </article>
+
+      <article class="card">
+        <h2>2. Artifact</h2>
+        <p>Select the artifact whose SHA-256 digest you want to compare.</p>
+        <label class="file-button">
+          <span>Select artifact</span>
+          <input id="artifactFile" type="file">
+        </label>
+        <p id="artifactStatus" class="status">No artifact loaded.</p>
+      </article>
+    </section>
+
+    <section class="card result-card">
+      <div class="result-heading">
+        <div>
+          <p class="eyebrow">Local comparison</p>
+          <h2 id="comparisonTitle">Waiting for input</h2>
+        </div>
+        <span id="comparisonBadge" class="badge neutral">NOT CHECKED</span>
+      </div>
+      <dl class="facts">
+        <div><dt>Manifest artifact digest</dt><dd id="expectedDigest">-</dd></div>
+        <div><dt>Calculated artifact digest</dt><dd id="actualDigest">-</dd></div>
+      </dl>
+    </section>
+
+    <section class="card">
+      <p class="eyebrow">Manifest fields</p>
+      <h2>Portable verification metadata</h2>
+      <dl class="facts">
+        <div><dt>Validation ID</dt><dd id="validationId">-</dd></div>
+        <div><dt>Profile</dt><dd id="profileId">-</dd></div>
+        <div><dt>Recorded at</dt><dd id="recordedAt">-</dd></div>
+        <div><dt>Signer fingerprint</dt><dd id="fingerprint">-</dd></div>
+        <div><dt>Envelope commitment</dt><dd id="envelopeDigest">-</dd></div>
+        <div><dt>Verification URI</dt><dd id="verificationUri">-</dd></div>
+      </dl>
+    </section>
+
+    <section class="limits">
+      <h2>What this page does not establish</h2>
+      <p>A matching artifact digest establishes only that the selected artifact bytes match the SHA-256 digest disclosed in the loaded manifest. This page does not verify the manifest Ed25519 signature, the full-envelope commitment, trust authorization, official ARV status, completeness of evidence, or material truth.</p>
+    </section>
+  </main>
+
+  <script src="./app.js"></script>
+</body>
+</html>

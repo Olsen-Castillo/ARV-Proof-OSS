@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://arv.example/schemas/arv-v1/verifier-attestation-transparency-receipt.schema.json",
+  "title": "ARV Verifier Attestation Transparency Receipt V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "schema_version", "receipt_id", "log_id", "entry_hash", "leaf_hash", "leaf_index", "tree_size", "checkpoint_hash", "prior_tree_size", "prior_checkpoint_hash", "inclusion_path", "consistency_path"],
+  "properties": {
+    "schema": {"const": "arv.verifier-attestation-transparency-receipt"},
+    "schema_version": {"const": 1},
+    "receipt_id": {"type": "string", "pattern": "^ARV-ATTESTATION-TRANSPARENCY-RECEIPT-[A-Z0-9-]+$"},
+    "log_id": {"type": "string", "pattern": "^ARV-ATTESTATION-TRANSPARENCY-LOG-[A-Z0-9-]+$"},
+    "entry_hash": {"$ref": "#/$defs/digest"},
+    "leaf_hash": {"$ref": "#/$defs/digest"},
+    "leaf_index": {"type": "integer", "minimum": 0},
+    "tree_size": {"type": "integer", "minimum": 1},
+    "checkpoint_hash": {"$ref": "#/$defs/digest"},
+    "prior_tree_size": {"type": "integer", "minimum": 0},
+    "prior_checkpoint_hash": {"oneOf": [{"$ref": "#/$defs/digest"}, {"type": "null"}]},
+    "inclusion_path": {"type": "array", "items": {"$ref": "#/$defs/digest"}},
+    "consistency_path": {"type": "array", "items": {"$ref": "#/$defs/digest"}}
+  },
+  "$defs": {"digest": {"type": "string", "pattern": "^[a-f0-9]{64}$"}}
+}

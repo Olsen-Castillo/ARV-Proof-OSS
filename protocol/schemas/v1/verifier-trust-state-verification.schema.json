@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:arv:schema:verifier-trust-state-verification:v1",
+  "title": "ARV Verifier Trust State Verification V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema", "schema_version", "accepted", "state", "operation", "current_state_hash",
+    "commit_precondition_hash", "next_state_hash", "next_state", "witness_state", "codes",
+    "authority_basis", "local_state_authority", "storage_authority", "transport_authority", "material_truth"
+  ],
+  "properties": {
+    "schema": { "const": "arv.verifier-trust-state-verification" },
+    "schema_version": { "const": 1 },
+    "accepted": { "type": "boolean" },
+    "state": {
+      "enum": [
+        "BOOTSTRAP_ACCEPTED", "ADVANCE_ACCEPTED", "REPLAY_ACCEPTED", "RECOVERY_ACCEPTED",
+        "UNDERLYING_WITNESS_REJECTED", "STATE_INVALID", "STATE_HASH_MISMATCH", "BOOTSTRAP_REQUIRED",
+        "BOOTSTRAP_PIN_MISMATCH", "BOOTSTRAP_REUSE_FORBIDDEN", "STATE_ROLLBACK", "STATE_GAP",
+        "STATE_EQUIVOCATION", "POLICY_ROLLBACK", "POLICY_GAP", "POLICY_EQUIVOCATION",
+        "ROOT_TRANSITION_REQUIRED", "ROOT_RECOVERY_INVALID", "PRIVATE_KEY_MATERIAL_FORBIDDEN"
+      ]
+    },
+    "operation": { "enum": ["NONE", "BOOTSTRAP", "ADVANCE", "REPLAY", "RECOVERY"] },
+    "current_state_hash": { "$ref": "#/$defs/nullableSha256" },
+    "commit_precondition_hash": { "$ref": "#/$defs/nullableSha256" },
+    "next_state_hash": { "$ref": "#/$defs/nullableSha256" },
+    "next_state": {
+      "oneOf": [
+        { "$ref": "verifier-trust-state.schema.json" },
+        { "type": "null" }
+      ]
+    },
+    "witness_state": {
+      "oneOf": [
+        { "type": "string", "minLength": 1 },
+        { "type": "null" }
+      ]
+    },
+    "codes": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "WITNESS_VERIFICATION_REJECTED", "CURRENT_STATE_SCHEMA_INVALID", "CURRENT_STATE_HASH_REQUIRED",
+          "CURRENT_STATE_HASH_MISMATCH", "BOOTSTRAP_PINS_REQUIRED", "BOOTSTRAP_PINS_SCHEMA_INVALID",
+          "BOOTSTRAP_ROOT_PIN_MISMATCH", "BOOTSTRAP_POLICY_PIN_MISMATCH",
+          "BOOTSTRAP_CHECKPOINT_PIN_MISMATCH", "BOOTSTRAP_REGISTRY_PIN_MISMATCH",
+          "BOOTSTRAP_REUSE_FORBIDDEN", "VERIFIER_ID_MISMATCH", "STATE_SEQUENCE_ROLLBACK",
+          "STATE_SEQUENCE_GAP", "STATE_CHECKPOINT_EQUIVOCATION", "STATE_PREDECESSOR_MISMATCH",
+          "POLICY_VERSION_ROLLBACK", "POLICY_VERSION_GAP", "POLICY_HASH_EQUIVOCATION",
+          "ROOT_TRANSITION_REQUIRED", "RECOVERY_AUTHORIZATION_REQUIRED", "RECOVERY_AUTHORIZATION_INVALID",
+          "RECOVERY_CURRENT_ROOT_MISMATCH", "RECOVERY_SUCCESSOR_ROOT_MISMATCH",
+          "RECOVERY_CHAIN_RESET_REQUIRED", "STATE_ENVELOPE_INVALID", "STATE_ENVELOPE_HASH_MISMATCH",
+          "EXTERNAL_STATE_PIN_REQUIRED", "PRIVATE_KEY_MATERIAL_FORBIDDEN"
+        ]
+      }
+    },
+    "authority_basis": { "const": "PINNED_TRUST_ROOT" },
+    "local_state_authority": { "const": "CONTINUITY_ONLY" },
+    "storage_authority": { "const": "NONE" },
+    "transport_authority": { "const": "NONE" },
+    "material_truth": { "const": "NOT_EVALUATED" }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "nullableSha256": {
+      "oneOf": [
+        { "$ref": "#/$defs/sha256" },
+        { "type": "null" }
+      ]
+    }
+  }
+}

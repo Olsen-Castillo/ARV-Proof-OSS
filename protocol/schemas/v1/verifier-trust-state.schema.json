@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:arv:schema:verifier-trust-state:v1",
+  "title": "ARV Verifier Trust State V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema", "schema_version", "state_id", "verifier_id", "generation", "recovery_count",
+    "bootstrap_mode", "status", "last_operation", "root_id", "root_version", "root_epoch", "root_hash",
+    "witness_policy_id", "witness_policy_version", "witness_policy_hash", "checkpoint_id",
+    "checkpoint_hash", "checkpoint_sequence", "registry_id", "registry_version", "registry_digest",
+    "observed_at", "created_at", "updated_at", "previous_state_hash"
+  ],
+  "properties": {
+    "schema": { "const": "arv.verifier-trust-state" },
+    "schema_version": { "const": 1 },
+    "state_id": { "type": "string", "pattern": "^ARV-VERIFIER-STATE-[A-Z0-9-]+$" },
+    "verifier_id": { "type": "string", "pattern": "^ARV-VERIFIER-[A-Z0-9-]+$" },
+    "generation": { "type": "integer", "minimum": 1 },
+    "recovery_count": { "type": "integer", "minimum": 0 },
+    "bootstrap_mode": { "const": "EXPLICIT_PIN" },
+    "status": { "const": "ACTIVE" },
+    "last_operation": { "enum": ["BOOTSTRAP", "ADVANCE", "RECOVERY"] },
+    "root_id": { "type": "string", "pattern": "^ARV-ROOT-[A-Z0-9-]+$" },
+    "root_version": { "type": "integer", "minimum": 1 },
+    "root_epoch": { "type": "integer", "minimum": 1 },
+    "root_hash": { "$ref": "#/$defs/sha256" },
+    "witness_policy_id": { "type": "string", "pattern": "^ARV-WITNESS-POLICY-[A-Z0-9-]+$" },
+    "witness_policy_version": { "type": "integer", "minimum": 1 },
+    "witness_policy_hash": { "$ref": "#/$defs/sha256" },
+    "checkpoint_id": { "type": "string", "pattern": "^ARV-TRUST-CHECKPOINT-[A-Z0-9-]+$" },
+    "checkpoint_hash": { "$ref": "#/$defs/sha256" },
+    "checkpoint_sequence": { "type": "integer", "minimum": 1 },
+    "registry_id": { "type": "string", "pattern": "^ARV-TRUST-REGISTRY-[A-Z0-9-]+$" },
+    "registry_version": { "type": "integer", "minimum": 1 },
+    "registry_digest": { "$ref": "#/$defs/sha256" },
+    "observed_at": { "$ref": "#/$defs/timestamp" },
+    "created_at": { "$ref": "#/$defs/timestamp" },
+    "updated_at": { "$ref": "#/$defs/timestamp" },
+    "previous_state_hash": {
+      "oneOf": [
+        { "$ref": "#/$defs/sha256" },
+        { "type": "null" }
+      ]
+    }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "timestamp": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,9})?Z$"
+    }
+  }
+}

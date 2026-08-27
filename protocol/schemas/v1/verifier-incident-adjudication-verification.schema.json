@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://arv.example/schemas/arv-v1/verifier-incident-adjudication-verification.schema.json",
+  "title": "ARV Verifier Incident Adjudication Verification V1",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema", "schema_version", "accepted", "frozen", "quarantined", "state", "operation", "policy_hash", "root_hash", "transparency_verification_hash", "incident_hash", "decision_hash", "current_quarantine_state_hash", "commit_precondition_hash", "next_quarantine_state_hash", "next_quarantine_state", "valid_adjudicator_signatures", "valid_root_recovery_signatures", "valid_recovery_adjudicator_signatures", "codes", "incident_evidence_authority", "adjudication_authority", "recovery_authority", "quarantine_authority", "log_operator_authority", "monitor_authority", "storage_authority", "transport_authority", "material_truth"],
+  "properties": {
+    "schema": {"const": "arv.verifier-incident-adjudication-verification"}, "schema_version": {"const": 1},
+    "accepted": {"type": "boolean"}, "frozen": {"type": "boolean"}, "quarantined": {"type": "boolean"},
+    "state": {"type": "string"}, "operation": {"enum": ["NONE", "DISMISS", "QUARANTINE", "RECOVER", "REPLAY", "RETAIN"]},
+    "policy_hash": {"$ref": "#/$defs/nullableDigest"}, "root_hash": {"$ref": "#/$defs/nullableDigest"},
+    "transparency_verification_hash": {"$ref": "#/$defs/nullableDigest"}, "incident_hash": {"$ref": "#/$defs/nullableDigest"},
+    "decision_hash": {"$ref": "#/$defs/nullableDigest"}, "current_quarantine_state_hash": {"$ref": "#/$defs/nullableDigest"},
+    "commit_precondition_hash": {"$ref": "#/$defs/nullableDigest"}, "next_quarantine_state_hash": {"$ref": "#/$defs/nullableDigest"},
+    "next_quarantine_state": {"oneOf": [{"type": "object"}, {"type": "null"}]},
+    "valid_adjudicator_signatures": {"type": "integer", "minimum": 0}, "valid_root_recovery_signatures": {"type": "integer", "minimum": 0}, "valid_recovery_adjudicator_signatures": {"type": "integer", "minimum": 0},
+    "codes": {"type": "array", "items": {"type": "string"}},
+    "incident_evidence_authority": {"const": "VERIFIED_TRANSPARENCY_COMMITMENTS"},
+    "adjudication_authority": {"const": "ROOT_BOUND_INDEPENDENT_ADJUDICATOR_QUORUM"},
+    "recovery_authority": {"const": "ROOT_RECOVERY_AND_ADJUDICATOR_QUORUM"},
+    "quarantine_authority": {"const": "FAIL_CLOSED_STATE_MACHINE"},
+    "log_operator_authority": {"const": "NONE"}, "monitor_authority": {"const": "NONE"}, "storage_authority": {"const": "NONE"}, "transport_authority": {"const": "NONE"}, "material_truth": {"const": "NOT_EVALUATED"}
+  },
+  "$defs": {"digest": {"type": "string", "pattern": "^[a-f0-9]{64}$"}, "nullableDigest": {"oneOf": [{"$ref": "#/$defs/digest"}, {"type": "null"}]}}
+}

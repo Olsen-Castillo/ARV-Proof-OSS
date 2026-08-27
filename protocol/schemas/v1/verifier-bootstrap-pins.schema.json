@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:arv:schema:verifier-bootstrap-pins:v1",
+  "title": "ARV Verifier Explicit Bootstrap Pins V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema", "schema_version", "root_id", "root_version", "root_epoch", "root_hash",
+    "witness_policy_id", "witness_policy_version", "witness_policy_hash", "checkpoint_id",
+    "checkpoint_hash", "checkpoint_sequence", "registry_id", "registry_version", "registry_digest"
+  ],
+  "properties": {
+    "schema": { "const": "arv.verifier-bootstrap-pins" },
+    "schema_version": { "const": 1 },
+    "root_id": { "type": "string", "pattern": "^ARV-ROOT-[A-Z0-9-]+$" },
+    "root_version": { "type": "integer", "minimum": 1 },
+    "root_epoch": { "type": "integer", "minimum": 1 },
+    "root_hash": { "$ref": "#/$defs/sha256" },
+    "witness_policy_id": { "type": "string", "pattern": "^ARV-WITNESS-POLICY-[A-Z0-9-]+$" },
+    "witness_policy_version": { "type": "integer", "minimum": 1 },
+    "witness_policy_hash": { "$ref": "#/$defs/sha256" },
+    "checkpoint_id": { "type": "string", "pattern": "^ARV-TRUST-CHECKPOINT-[A-Z0-9-]+$" },
+    "checkpoint_hash": { "$ref": "#/$defs/sha256" },
+    "checkpoint_sequence": { "type": "integer", "minimum": 1 },
+    "registry_id": { "type": "string", "pattern": "^ARV-TRUST-REGISTRY-[A-Z0-9-]+$" },
+    "registry_version": { "type": "integer", "minimum": 1 },
+    "registry_digest": { "$ref": "#/$defs/sha256" }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+  }
+}

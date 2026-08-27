@@ -1,0 +1,130 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/Olsen-Castillo/ARV-Proof-OSS/main/protocol/schemas/v1/portable-proof-manifest.schema.json",
+  "title": "ARV Portable Proof Manifest V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "schema_version",
+    "validation_id",
+    "profile_id",
+    "envelope_digest",
+    "artifact_digest",
+    "recorded_at",
+    "signer",
+    "verification_uri",
+    "signature"
+  ],
+  "properties": {
+    "schema": {
+      "const": "arv.portable-proof-manifest"
+    },
+    "schema_version": {
+      "const": 1
+    },
+    "validation_id": {
+      "type": "string",
+      "pattern": "^(?:ARV-[0-9]{4}-[0-9]{6}|ARV-SM-[0-9]{4}-[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12})$"
+    },
+    "profile_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "envelope_digest": {
+      "$ref": "#/$defs/canonicalDigest"
+    },
+    "artifact_digest": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/digest"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "recorded_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "signer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "algorithm",
+        "public_key_fingerprint"
+      ],
+      "properties": {
+        "algorithm": {
+          "const": "Ed25519"
+        },
+        "public_key_fingerprint": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{24}$"
+        }
+      }
+    },
+    "verification_uri": {
+      "type": "string",
+      "format": "uri"
+    },
+    "signature": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "algorithm",
+        "value"
+      ],
+      "properties": {
+        "algorithm": {
+          "const": "Ed25519"
+        },
+        "value": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  },
+  "$defs": {
+    "digest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "algorithm",
+        "value"
+      ],
+      "properties": {
+        "algorithm": {
+          "const": "SHA-256"
+        },
+        "value": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      }
+    },
+    "canonicalDigest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "algorithm",
+        "canonicalization",
+        "value"
+      ],
+      "properties": {
+        "algorithm": {
+          "const": "SHA-256"
+        },
+        "canonicalization": {
+          "const": "ARV-JSON-v1"
+        },
+        "value": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      }
+    }
+  }
+}

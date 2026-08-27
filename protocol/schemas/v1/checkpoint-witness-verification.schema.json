@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:arv:schema:checkpoint-witness-verification:v1",
+  "title": "ARV Checkpoint Witness Verification V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema", "schema_version", "accepted", "state", "checkpoint_hash", "trusted_witness_checkpoint",
+    "witness_count", "codes", "authority_basis", "witness_authority", "transport_authority", "material_truth"
+  ],
+  "properties": {
+    "schema": { "const": "arv.checkpoint-witness-verification" },
+    "schema_version": { "const": 1 },
+    "accepted": { "type": "boolean" },
+    "state": {
+      "enum": [
+        "WITNESS_QUORUM_VALID", "UNDERLYING_CHECKPOINT_INVALID", "WITNESS_POLICY_INVALID",
+        "WITNESS_POLICY_UNTRUSTED", "WITNESS_QUORUM_INSUFFICIENT", "WITNESS_SIGNATURE_INVALID",
+        "WITNESS_STALE", "WITNESS_ROLLBACK", "WITNESS_GAP", "SPLIT_VIEW_DETECTED",
+        "WITNESS_EQUIVOCATION", "WITNESS_INVALID"
+      ]
+    },
+    "checkpoint_hash": {
+      "oneOf": [
+        { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        { "type": "null" }
+      ]
+    },
+    "trusted_witness_checkpoint": {
+      "oneOf": [
+        { "$ref": "#/$defs/trustedWitnessCheckpoint" },
+        { "type": "null" }
+      ]
+    },
+    "witness_count": { "type": "integer", "minimum": 0 },
+    "codes": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "UNDERLYING_CHECKPOINT_REJECTED", "WITNESS_POLICY_SCHEMA_INVALID",
+          "WITNESS_POLICY_ROOT_BINDING_MISMATCH", "WITNESS_POLICY_NOT_ACTIVE", "WITNESS_POLICY_EXPIRED",
+          "WITNESS_POLICY_ROOT_THRESHOLD_NOT_MET", "WITNESS_POLICY_SIGNATURE_INVALID",
+          "WITNESS_BUNDLE_SCHEMA_INVALID", "WITNESS_OBSERVATION_SCHEMA_INVALID", "WITNESS_NOT_AUTHORIZED",
+          "WITNESS_NOT_ACTIVE", "WITNESS_OBSERVATION_TIME_INVALID", "WITNESS_OBSERVATION_STALE",
+          "WITNESS_SIGNATURE_INVALID", "WITNESS_THRESHOLD_NOT_MET", "WITNESS_CHECKPOINT_BINDING_MISMATCH",
+          "WITNESS_SPLIT_VIEW_DETECTED", "WITNESS_EQUIVOCATION_DETECTED", "WITNESS_SEQUENCE_ROLLBACK",
+          "WITNESS_SEQUENCE_GAP", "WITNESS_PREDECESSOR_MISMATCH", "TRUSTED_WITNESS_CHECKPOINT_INVALID",
+          "PRIVATE_KEY_MATERIAL_FORBIDDEN"
+        ]
+      }
+    },
+    "authority_basis": { "const": "PINNED_TRUST_ROOT" },
+    "witness_authority": { "const": "DETECTION_ONLY" },
+    "transport_authority": { "const": "NONE" },
+    "material_truth": { "const": "NOT_EVALUATED" }
+  },
+  "$defs": {
+    "trustedWitnessCheckpoint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "checkpoint_id", "checkpoint_hash", "sequence", "witness_policy_id",
+        "witness_policy_version", "observed_at"
+      ],
+      "properties": {
+        "checkpoint_id": { "type": "string", "pattern": "^ARV-TRUST-CHECKPOINT-[A-Z0-9-]+$" },
+        "checkpoint_hash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "sequence": { "type": "integer", "minimum": 1 },
+        "witness_policy_id": { "type": "string", "pattern": "^ARV-WITNESS-POLICY-[A-Z0-9-]+$" },
+        "witness_policy_version": { "type": "integer", "minimum": 1 },
+        "observed_at": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,9})?Z$"
+        }
+      }
+    }
+  }
+}

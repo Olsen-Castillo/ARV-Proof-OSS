@@ -1,0 +1,110 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:arv:schema:trust-registry-checkpoint-verification:v1",
+  "title": "ARV Trust Registry Checkpoint Verification V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "schema_version",
+    "accepted",
+    "state",
+    "checkpoint_hash",
+    "trusted_checkpoint",
+    "codes",
+    "authority_basis",
+    "transport_authority",
+    "material_truth"
+  ],
+  "properties": {
+    "schema": { "const": "arv.trust-registry-checkpoint-verification" },
+    "schema_version": { "const": 1 },
+    "accepted": { "type": "boolean" },
+    "state": {
+      "enum": [
+        "CHECKPOINT_VALID",
+        "CHECKPOINT_NOT_YET_VALID",
+        "CHECKPOINT_EXPIRED",
+        "CHECKPOINT_ROLLBACK",
+        "CHECKPOINT_EQUIVOCATION",
+        "CHECKPOINT_GAP",
+        "ROOT_UNTRUSTED",
+        "MANIFEST_INVALID",
+        "REGISTRY_DIGEST_MISMATCH",
+        "INSUFFICIENT_THRESHOLD",
+        "CHECKPOINT_INVALID"
+      ]
+    },
+    "checkpoint_hash": {
+      "oneOf": [
+        { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        { "type": "null" }
+      ]
+    },
+    "trusted_checkpoint": {
+      "oneOf": [
+        { "$ref": "#/$defs/trustedCheckpoint" },
+        { "type": "null" }
+      ]
+    },
+    "codes": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "CHECKPOINT_SCHEMA_INVALID",
+          "MANIFEST_SCHEMA_INVALID",
+          "TRUSTED_CHECKPOINT_INVALID",
+          "CHECKPOINT_NOT_ACTIVE",
+          "CHECKPOINT_EXPIRED_AT_EVALUATION",
+          "CHECKPOINT_SEQUENCE_ROLLBACK",
+          "REGISTRY_VERSION_ROLLBACK",
+          "ROOT_VERSION_ROLLBACK",
+          "ROOT_EPOCH_ROLLBACK",
+          "CHECKPOINT_EQUIVOCATION_DETECTED",
+          "CHECKPOINT_CHAIN_GAP",
+          "PREVIOUS_CHECKPOINT_HASH_MISMATCH",
+          "ROOT_BINDING_MISMATCH",
+          "MANIFEST_DIGEST_MISMATCH",
+          "MANIFEST_TIME_INVALID",
+          "MANIFEST_REGISTRY_MISMATCH",
+          "REGISTRY_ARTIFACT_DIGEST_MISMATCH",
+          "ROOT_THRESHOLD_NOT_MET",
+          "SIGNATURE_INVALID",
+          "PRIVATE_KEY_MATERIAL_FORBIDDEN"
+        ]
+      }
+    },
+    "authority_basis": { "const": "PINNED_TRUST_ROOT" },
+    "transport_authority": { "const": "NONE" },
+    "material_truth": { "const": "NOT_EVALUATED" }
+  },
+  "$defs": {
+    "trustedCheckpoint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "checkpoint_id",
+        "checkpoint_hash",
+        "sequence",
+        "registry_id",
+        "registry_version",
+        "registry_digest",
+        "root_id",
+        "root_version",
+        "root_epoch"
+      ],
+      "properties": {
+        "checkpoint_id": { "type": "string", "pattern": "^ARV-TRUST-CHECKPOINT-[A-Z0-9-]+$" },
+        "checkpoint_hash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "sequence": { "type": "integer", "minimum": 1 },
+        "registry_id": { "type": "string", "pattern": "^ARV-TRUST-REGISTRY-[A-Z0-9-]+$" },
+        "registry_version": { "type": "integer", "minimum": 1 },
+        "registry_digest": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "root_id": { "type": "string", "pattern": "^ARV-ROOT-[A-Z0-9-]+$" },
+        "root_version": { "type": "integer", "minimum": 1 },
+        "root_epoch": { "type": "integer", "minimum": 1 }
+      }
+    }
+  }
+}

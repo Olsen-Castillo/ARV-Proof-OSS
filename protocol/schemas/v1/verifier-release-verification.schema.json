@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:arv:schema:verifier-release-verification:v1",
+  "title": "ARV Verifier Release Verification V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema", "schema_version", "accepted", "state", "operation", "trusted_state_hash",
+    "current_pin_hash", "commit_precondition_hash", "manifest_hash", "next_pin_hash", "next_pin",
+    "valid_builder_attestations", "codes", "authority_basis", "release_authority", "build_authority",
+    "storage_authority", "transport_authority", "material_truth"
+  ],
+  "properties": {
+    "schema": { "const": "arv.verifier-release-verification" },
+    "schema_version": { "const": 1 },
+    "accepted": { "type": "boolean" },
+    "state": {
+      "enum": [
+        "BOOTSTRAP_ACCEPTED", "UPDATE_ACCEPTED", "REPLAY_ACCEPTED", "TRUST_STATE_INVALID",
+        "TRUST_STATE_HASH_MISMATCH", "ROOT_MISMATCH", "POLICY_INVALID", "POLICY_UNAUTHORIZED",
+        "POLICY_ROLLBACK", "POLICY_GAP", "POLICY_EQUIVOCATION", "MANIFEST_INVALID",
+        "MANIFEST_UNAUTHORIZED", "BUILD_ATTESTATION_INVALID", "BUILD_QUORUM_NOT_MET",
+        "BOOTSTRAP_PIN_REQUIRED", "BOOTSTRAP_PIN_MISMATCH", "CURRENT_PIN_REQUIRED",
+        "CURRENT_PIN_INVALID", "CURRENT_PIN_HASH_REQUIRED", "CURRENT_PIN_HASH_MISMATCH",
+        "RELEASE_ROLLBACK", "RELEASE_GAP", "RELEASE_EQUIVOCATION",
+        "RELEASE_PREDECESSOR_MISMATCH", "PRIVATE_KEY_MATERIAL_FORBIDDEN"
+      ]
+    },
+    "operation": { "enum": ["NONE", "BOOTSTRAP", "UPDATE", "REPLAY"] },
+    "trusted_state_hash": { "$ref": "#/$defs/nullableSha256" },
+    "current_pin_hash": { "$ref": "#/$defs/nullableSha256" },
+    "commit_precondition_hash": { "$ref": "#/$defs/nullableSha256" },
+    "manifest_hash": { "$ref": "#/$defs/nullableSha256" },
+    "next_pin_hash": { "$ref": "#/$defs/nullableSha256" },
+    "next_pin": { "oneOf": [{ "$ref": "verifier-release-pin.schema.json" }, { "type": "null" }] },
+    "valid_builder_attestations": { "type": "integer", "minimum": 0 },
+    "codes": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "TRUST_STATE_SCHEMA_INVALID", "TRUST_STATE_PIN_REQUIRED", "TRUST_STATE_PIN_MISMATCH",
+          "TRUST_ROOT_SCHEMA_INVALID", "TRUST_ROOT_HASH_MISMATCH", "TRUST_ROOT_VERSION_MISMATCH",
+          "RELEASE_POLICY_SCHEMA_INVALID", "RELEASE_POLICY_ROOT_MISMATCH", "RELEASE_POLICY_SIGNATURE_INVALID",
+          "RELEASE_POLICY_THRESHOLD_NOT_MET", "RELEASE_POLICY_TIME_INVALID", "RELEASE_MANIFEST_SCHEMA_INVALID",
+          "RELEASE_MANIFEST_POLICY_MISMATCH", "RELEASE_MANIFEST_SIGNATURE_INVALID",
+          "RELEASE_MANIFEST_THRESHOLD_NOT_MET", "RELEASE_MANIFEST_TIME_INVALID",
+          "BUILD_ATTESTATION_SCHEMA_INVALID", "BUILD_ATTESTATION_BINDING_MISMATCH",
+          "BUILD_ATTESTATION_SIGNATURE_INVALID", "BUILD_ATTESTATION_THRESHOLD_NOT_MET",
+          "BOOTSTRAP_RELEASE_HASH_REQUIRED", "BOOTSTRAP_RELEASE_HASH_MISMATCH",
+          "CURRENT_RELEASE_PIN_REQUIRED", "CURRENT_RELEASE_PIN_SCHEMA_INVALID",
+          "CURRENT_RELEASE_PIN_HASH_REQUIRED", "CURRENT_RELEASE_PIN_HASH_MISMATCH", "VERIFIER_ID_MISMATCH",
+          "RELEASE_SEQUENCE_ROLLBACK", "RELEASE_SEQUENCE_GAP", "RELEASE_HASH_EQUIVOCATION",
+          "RELEASE_PREDECESSOR_HASH_MISMATCH", "RELEASE_POLICY_VERSION_ROLLBACK",
+          "RELEASE_POLICY_VERSION_GAP", "RELEASE_POLICY_HASH_EQUIVOCATION", "PRIVATE_KEY_MATERIAL_FORBIDDEN"
+        ]
+      }
+    },
+    "authority_basis": { "const": "PINNED_VERIFIER_TRUST_STATE" },
+    "release_authority": { "const": "ROOT_AUTHORIZED_RELEASE_POLICY" },
+    "build_authority": { "const": "INDEPENDENT_ATTESTATION_ONLY" },
+    "storage_authority": { "const": "NONE" },
+    "transport_authority": { "const": "NONE" },
+    "material_truth": { "const": "NOT_EVALUATED" }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "nullableSha256": { "oneOf": [{ "$ref": "#/$defs/sha256" }, { "type": "null" }] }
+  }
+}

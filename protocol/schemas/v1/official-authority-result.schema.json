@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:arv:schema:official-authority-result:v1",
+  "title": "ARV OfficialAuthorityResultV1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "schema_version",
+    "status",
+    "authority_at_recording",
+    "current_key_status",
+    "authorization_id",
+    "issuer_id",
+    "key_fingerprint",
+    "product",
+    "environment",
+    "recorded_at",
+    "evaluated_at",
+    "cryptographic_integrity",
+    "cryptographic_codes",
+    "registry",
+    "codes",
+    "material_truth"
+  ],
+  "properties": {
+    "schema": { "const": "arv.official-authority-result" },
+    "schema_version": { "const": 1 },
+    "status": {
+      "enum": ["OFFICIAL", "UNOFFICIAL", "UNKNOWN", "SUSPENDED", "REVOKED", "EXPIRED", "OUT_OF_SCOPE"]
+    },
+    "authority_at_recording": { "type": ["boolean", "null"] },
+    "current_key_status": { "enum": ["ACTIVE", "SUSPENDED", "REVOKED", "EXPIRED", "UNKNOWN"] },
+    "authorization_id": { "type": ["string", "null"] },
+    "issuer_id": { "type": ["string", "null"] },
+    "key_fingerprint": { "type": ["string", "null"], "pattern": "^[a-f0-9]{24}$" },
+    "product": { "enum": ["ARV_SNAP", "ARV_PROOF_OSS", "PROOFOPS", "GENERIC"] },
+    "environment": { "enum": ["PRODUCTION", "TEST"] },
+    "recorded_at": { "type": ["string", "null"], "format": "date-time" },
+    "evaluated_at": { "type": "string", "format": "date-time" },
+    "cryptographic_integrity": { "enum": ["VERIFIED", "FAILED", "INDETERMINATE"] },
+    "cryptographic_codes": { "type": "array", "uniqueItems": true, "items": { "type": "string" } },
+    "registry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["registry_id", "sequence", "registry_hash", "trust_codes"],
+      "properties": {
+        "registry_id": { "type": ["string", "null"] },
+        "sequence": { "type": ["integer", "null"], "minimum": 1 },
+        "registry_hash": { "type": ["string", "null"], "pattern": "^[a-f0-9]{64}$" },
+        "trust_codes": { "type": "array", "uniqueItems": true, "items": { "type": "string" } }
+      }
+    },
+    "codes": { "type": "array", "uniqueItems": true, "items": { "type": "string" } },
+    "material_truth": { "const": "NOT_EVALUATED" }
+  }
+}

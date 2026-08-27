@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://arv.example/schemas/arv-v1/verifier-security-event.schema.json",
+  "title": "ARV Verifier Security Event V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "schema_version", "event_id", "verifier_id", "instance_id", "event_sequence", "event_type", "severity", "activation_pin_hash", "runtime_measurement_hash", "details_digest", "observed_at", "previous_event_hash"],
+  "properties": {
+    "schema": {"const": "arv.verifier-security-event"}, "schema_version": {"const": 1},
+    "event_id": {"type": "string", "pattern": "^ARV-VERIFIER-SECURITY-EVENT-[A-Z0-9-]+$"},
+    "verifier_id": {"type": "string", "pattern": "^ARV-VERIFIER-[A-Z0-9-]+$"}, "instance_id": {"type": "string", "pattern": "^ARV-VERIFIER-INSTANCE-[A-Z0-9-]+$"},
+    "event_sequence": {"type": "integer", "minimum": 1},
+    "event_type": {"enum": ["BOOT", "DRIFT_DETECTED", "INCIDENT_REPORTED", "QUARANTINE_ENTERED", "QUARANTINE_RELEASED", "RUNTIME_CHECK", "SHUTDOWN", "UPDATE_ACTIVATED"]},
+    "severity": {"enum": ["CRITICAL", "HIGH", "INFO", "LOW", "MEDIUM"]},
+    "activation_pin_hash": {"$ref": "#/$defs/digest"}, "runtime_measurement_hash": {"$ref": "#/$defs/digest"}, "details_digest": {"$ref": "#/$defs/digest"},
+    "observed_at": {"type": "string", "format": "date-time"}, "previous_event_hash": {"oneOf": [{"$ref": "#/$defs/digest"}, {"type": "null"}]}
+  },
+  "$defs": {"digest": {"type": "string", "pattern": "^[a-f0-9]{64}$"}}
+}

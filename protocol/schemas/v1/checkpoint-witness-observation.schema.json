@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:arv:schema:checkpoint-witness-observation:v1",
+  "title": "ARV Checkpoint Witness Observation V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema", "schema_version", "observation_id", "witness_policy_id", "witness_policy_version",
+    "witness_key_id", "checkpoint_id", "checkpoint_hash", "sequence", "registry_id",
+    "registry_version", "registry_digest", "previous_checkpoint_hash", "observed_at", "signature"
+  ],
+  "properties": {
+    "schema": { "const": "arv.checkpoint-witness-observation" },
+    "schema_version": { "const": 1 },
+    "observation_id": { "type": "string", "pattern": "^ARV-WITNESS-OBSERVATION-[A-Z0-9-]+$" },
+    "witness_policy_id": { "type": "string", "pattern": "^ARV-WITNESS-POLICY-[A-Z0-9-]+$" },
+    "witness_policy_version": { "type": "integer", "minimum": 1 },
+    "witness_key_id": { "type": "string", "pattern": "^[a-f0-9]{24}$" },
+    "checkpoint_id": { "type": "string", "pattern": "^ARV-TRUST-CHECKPOINT-[A-Z0-9-]+$" },
+    "checkpoint_hash": { "$ref": "#/$defs/sha256" },
+    "sequence": { "type": "integer", "minimum": 1 },
+    "registry_id": { "type": "string", "pattern": "^ARV-TRUST-REGISTRY-[A-Z0-9-]+$" },
+    "registry_version": { "type": "integer", "minimum": 1 },
+    "registry_digest": { "$ref": "#/$defs/sha256" },
+    "previous_checkpoint_hash": {
+      "oneOf": [
+        { "$ref": "#/$defs/sha256" },
+        { "type": "null" }
+      ]
+    },
+    "observed_at": { "$ref": "#/$defs/timestamp" },
+    "signature": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["algorithm", "signature_base64"],
+      "properties": {
+        "algorithm": { "const": "Ed25519" },
+        "signature_base64": { "type": "string", "minLength": 1 }
+      }
+    }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "timestamp": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,9})?Z$"
+    }
+  }
+}

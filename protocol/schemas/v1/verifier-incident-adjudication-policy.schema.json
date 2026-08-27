@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://arv.example/schemas/arv-v1/verifier-incident-adjudication-policy.schema.json",
+  "title": "ARV Verifier Incident Adjudication Policy V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "schema_version", "policy_id", "policy_version", "root_id", "root_version", "root_epoch", "root_hash", "adjudication_threshold", "dismissal_threshold", "recovery_threshold", "max_decision_age_seconds", "max_clock_skew_seconds", "adjudicators", "issued_at"],
+  "properties": {
+    "schema": {"const": "arv.verifier-incident-adjudication-policy"},
+    "schema_version": {"const": 1},
+    "policy_id": {"type": "string", "pattern": "^ARV-INCIDENT-ADJUDICATION-POLICY-[A-Z0-9-]+$"},
+    "policy_version": {"type": "integer", "minimum": 1},
+    "root_id": {"type": "string", "pattern": "^ARV-ROOT-[A-Z0-9-]+$"},
+    "root_version": {"type": "integer", "minimum": 1},
+    "root_epoch": {"type": "integer", "minimum": 1},
+    "root_hash": {"$ref": "#/$defs/digest"},
+    "adjudication_threshold": {"type": "integer", "minimum": 1},
+    "dismissal_threshold": {"type": "integer", "minimum": 1},
+    "recovery_threshold": {"type": "integer", "minimum": 1},
+    "max_decision_age_seconds": {"type": "integer", "minimum": 1},
+    "max_clock_skew_seconds": {"type": "integer", "minimum": 1},
+    "adjudicators": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/adjudicator"}},
+    "issued_at": {"type": "string", "format": "date-time"}
+  },
+  "$defs": {
+    "digest": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "adjudicator": {
+      "type": "object", "additionalProperties": false,
+      "required": ["adjudicator_id", "key_id", "algorithm", "public_key_spki_base64", "status", "valid_from", "expires_at"],
+      "properties": {
+        "adjudicator_id": {"type": "string", "pattern": "^ARV-ADJUDICATOR-[A-Z0-9-]+$"},
+        "key_id": {"type": "string", "pattern": "^[a-f0-9]{24,128}$"},
+        "algorithm": {"const": "Ed25519"}, "public_key_spki_base64": {"type": "string", "contentEncoding": "base64"},
+        "status": {"enum": ["ACTIVE", "REVOKED"]}, "valid_from": {"type": "string", "format": "date-time"}, "expires_at": {"type": "string", "format": "date-time"}
+      }
+    }
+  }
+}

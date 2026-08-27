@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.arv.example/arv-v1/verifier-runtime-measurement.schema.json",
+  "title": "ARV Verifier Runtime Measurement V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "schema_version", "measurement_id", "verifier_id", "instance_id", "activation_sequence", "installation_hash", "release_manifest_hash", "runtime_profile_hash", "observed_artifact_set_digest", "executable_digest", "configuration_digest", "policy_bundle_digest", "schema_bundle_digest", "dependency_set_digest", "loaded_module_set_digest", "environment_constraints_digest", "measured_at"],
+  "properties": {
+    "schema": { "const": "arv.verifier-runtime-measurement" },
+    "schema_version": { "const": 1 },
+    "measurement_id": { "type": "string", "pattern": "^ARV-VERIFIER-RUNTIME-MEASUREMENT-[A-Z0-9-]+$" },
+    "verifier_id": { "type": "string", "pattern": "^ARV-VERIFIER-[A-Z0-9-]+$" },
+    "instance_id": { "type": "string", "pattern": "^ARV-VERIFIER-INSTANCE-[A-Z0-9-]+$" },
+    "activation_sequence": { "type": "integer", "minimum": 1 },
+    "installation_hash": { "$ref": "#/$defs/digest" },
+    "release_manifest_hash": { "$ref": "#/$defs/digest" },
+    "runtime_profile_hash": { "$ref": "#/$defs/digest" },
+    "observed_artifact_set_digest": { "$ref": "#/$defs/digest" },
+    "executable_digest": { "$ref": "#/$defs/digest" },
+    "configuration_digest": { "$ref": "#/$defs/digest" },
+    "policy_bundle_digest": { "$ref": "#/$defs/digest" },
+    "schema_bundle_digest": { "$ref": "#/$defs/digest" },
+    "dependency_set_digest": { "$ref": "#/$defs/digest" },
+    "loaded_module_set_digest": { "$ref": "#/$defs/digest" },
+    "environment_constraints_digest": { "$ref": "#/$defs/digest" },
+    "measured_at": { "type": "string", "format": "date-time" }
+  },
+  "$defs": { "digest": { "type": "string", "pattern": "^[a-f0-9]{64}$" } }
+}

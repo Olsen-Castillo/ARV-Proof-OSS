@@ -1,0 +1,27 @@
+{
+  "name": "arv-proof-oss",
+  "version": "0.2.1",
+  "private": true,
+  "description": "Domain-neutral cryptographic proof and verification infrastructure for portable evidence and provenance.",
+  "license": "SEE LICENSE IN LICENSES/SCOPE.md",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "jest --runInBand",
+    "validate:public": "node scripts/validate-public-surface.mjs",
+    "ci": "npm run validate:public && npm run typecheck && npm test"
+  },
+  "dependencies": {
+    "tweetnacl": "1.0.3",
+    "tweetnacl-util": "0.15.1"
+  },
+  "devDependencies": {
+    "@types/jest": "29.5.14",
+    "@types/node": "20.19.35",
+    "jest": "29.7.0",
+    "ts-jest": "29.4.12",
+    "typescript": "5.9.3"
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://raw.githubusercontent.com/Olsen-Castillo/ARV-Proof-OSS/main/protocol/schemas/v1/evidence-ledger-entry.schema.json",
+  "title": "ARV Evidence Ledger Entry V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "schema_version",
+    "validation_id",
+    "artifact_digest",
+    "merkle_root",
+    "ledger_position",
+    "profile_id",
+    "signature_algorithm",
+    "public_key_fingerprint",
+    "verification_url",
+    "recorded_at"
+  ],
+  "properties": {
+    "schema": { "const": "arv.evidence-ledger-entry" },
+    "schema_version": { "const": 1 },
+    "validation_id": {
+      "type": "string",
+      "pattern": "^ARV-[0-9]{4}-[0-9]{6}$"
+    },
+    "artifact_digest": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "merkle_root": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "ledger_position": { "type": "integer", "minimum": 1 },
+    "profile_id": {
+      "type": "string",
+      "pattern": "^arv\\.profile\\.[a-z0-9.-]+\\.v[1-9][0-9]*$"
+    },
+    "signature_algorithm": { "const": "Ed25519" },
+    "public_key_fingerprint": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{24}$"
+    },
+    "verification_url": { "type": "string", "format": "uri" },
+    "recorded_at": { "type": "string", "format": "date-time" }
+  }
+}

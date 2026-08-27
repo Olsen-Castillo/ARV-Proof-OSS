@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://arv.example/schemas/arv-v1/verifier-attestation-transparency-verification.schema.json",
+  "title": "ARV Verifier Attestation Transparency Verification V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "schema_version", "accepted", "frozen", "state", "operation", "policy_hash", "attestation_hash", "security_event_chain_hash", "entry_hash", "leaf_hash", "checkpoint_hash", "current_checkpoint_hash", "commit_precondition_hash", "next_checkpoint_hash", "valid_operator_signatures", "valid_monitor_observations", "codes", "runtime_evidence_authority", "transparency_authority", "log_operator_authority", "monitor_authority", "storage_authority", "transport_authority", "material_truth"],
+  "properties": {
+    "schema": {"const": "arv.verifier-attestation-transparency-verification"},
+    "schema_version": {"const": 1},
+    "accepted": {"type": "boolean"}, "frozen": {"type": "boolean"},
+    "state": {"type": "string"}, "operation": {"enum": ["NONE", "BOOTSTRAP", "UPDATE", "REPLAY"]},
+    "policy_hash": {"$ref": "#/$defs/nullableDigest"}, "attestation_hash": {"$ref": "#/$defs/nullableDigest"},
+    "security_event_chain_hash": {"$ref": "#/$defs/nullableDigest"}, "entry_hash": {"$ref": "#/$defs/nullableDigest"},
+    "leaf_hash": {"$ref": "#/$defs/nullableDigest"}, "checkpoint_hash": {"$ref": "#/$defs/nullableDigest"},
+    "current_checkpoint_hash": {"$ref": "#/$defs/nullableDigest"}, "commit_precondition_hash": {"$ref": "#/$defs/nullableDigest"},
+    "next_checkpoint_hash": {"$ref": "#/$defs/nullableDigest"},
+    "valid_operator_signatures": {"type": "integer", "minimum": 0}, "valid_monitor_observations": {"type": "integer", "minimum": 0},
+    "codes": {"type": "array", "items": {"type": "string"}},
+    "runtime_evidence_authority": {"const": "VERIFIED_ATTESTATION_AND_EVENT_CHAIN"},
+    "transparency_authority": {"const": "APPEND_ONLY_COMMITMENT_PROOFS"},
+    "log_operator_authority": {"const": "COMMITMENT_PUBLICATION_ONLY"},
+    "monitor_authority": {"const": "INDEPENDENT_OBSERVATION_ONLY"},
+    "storage_authority": {"const": "NONE"}, "transport_authority": {"const": "NONE"},
+    "material_truth": {"const": "NOT_EVALUATED"}
+  },
+  "$defs": {"digest": {"type": "string", "pattern": "^[a-f0-9]{64}$"}, "nullableDigest": {"oneOf": [{"$ref": "#/$defs/digest"}, {"type": "null"}]}}
+}

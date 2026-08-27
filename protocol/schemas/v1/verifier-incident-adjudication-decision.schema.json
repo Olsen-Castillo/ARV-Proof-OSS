@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://arv.example/schemas/arv-v1/verifier-incident-adjudication-decision.schema.json",
+  "title": "ARV Verifier Incident Adjudication Decision V1",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema", "schema_version", "decision_id", "incident_id", "incident_hash", "decision_sequence", "outcome", "policy_id", "policy_version", "policy_hash", "reason_digest", "issued_at", "previous_decision_hash", "authorizations"],
+  "properties": {
+    "schema": {"const": "arv.verifier-incident-adjudication-decision"}, "schema_version": {"const": 1},
+    "decision_id": {"type": "string", "pattern": "^ARV-INCIDENT-DECISION-[A-Z0-9-]+$"},
+    "incident_id": {"type": "string", "pattern": "^ARV-INCIDENT-[A-Z0-9-]+$"},
+    "incident_hash": {"$ref": "#/$defs/digest"}, "decision_sequence": {"type": "integer", "minimum": 1},
+    "outcome": {"enum": ["DISMISS", "QUARANTINE", "RECOVER", "RETAIN_QUARANTINE"]},
+    "policy_id": {"type": "string", "pattern": "^ARV-INCIDENT-ADJUDICATION-POLICY-[A-Z0-9-]+$"},
+    "policy_version": {"type": "integer", "minimum": 1}, "policy_hash": {"$ref": "#/$defs/digest"},
+    "reason_digest": {"$ref": "#/$defs/digest"}, "issued_at": {"type": "string", "format": "date-time"},
+    "previous_decision_hash": {"$ref": "#/$defs/nullableDigest"},
+    "authorizations": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/signature"}}
+  },
+  "$defs": {
+    "digest": {"type": "string", "pattern": "^[a-f0-9]{64}$"}, "nullableDigest": {"oneOf": [{"$ref": "#/$defs/digest"}, {"type": "null"}]},
+    "signature": {"type": "object", "additionalProperties": false, "required": ["algorithm", "key_id", "signature_base64"], "properties": {"algorithm": {"const": "Ed25519"}, "key_id": {"type": "string", "pattern": "^[a-f0-9]{24,128}$"}, "signature_base64": {"type": "string", "contentEncoding": "base64"}}}
+  }
+}

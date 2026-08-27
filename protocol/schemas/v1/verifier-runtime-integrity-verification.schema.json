@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.arv.example/arv-v1/verifier-runtime-integrity-verification.schema.json",
+  "title": "ARV Verifier Runtime Integrity Verification V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "schema_version", "accepted", "quarantined", "state", "operation", "release_verification_state", "release_manifest_hash", "release_pin_hash", "installation_hash", "runtime_profile_hash", "runtime_measurement_hash", "current_activation_pin_hash", "commit_precondition_hash", "next_activation_pin_hash", "next_activation_pin", "codes", "release_authority", "activation_authority", "operating_system_authority", "installer_authority", "app_store_authority", "storage_authority", "transport_authority", "material_truth"],
+  "properties": {
+    "schema": { "const": "arv.verifier-runtime-integrity-verification" },
+    "schema_version": { "const": 1 },
+    "accepted": { "type": "boolean" },
+    "quarantined": { "type": "boolean" },
+    "state": { "type": "string" },
+    "operation": { "enum": ["NONE", "BOOTSTRAP", "UPDATE", "VERIFY", "REPLAY"] },
+    "release_verification_state": { "type": ["string", "null"] },
+    "release_manifest_hash": { "$ref": "#/$defs/nullableDigest" },
+    "release_pin_hash": { "$ref": "#/$defs/nullableDigest" },
+    "installation_hash": { "$ref": "#/$defs/nullableDigest" },
+    "runtime_profile_hash": { "$ref": "#/$defs/nullableDigest" },
+    "runtime_measurement_hash": { "$ref": "#/$defs/nullableDigest" },
+    "current_activation_pin_hash": { "$ref": "#/$defs/nullableDigest" },
+    "commit_precondition_hash": { "$ref": "#/$defs/nullableDigest" },
+    "next_activation_pin_hash": { "$ref": "#/$defs/nullableDigest" },
+    "next_activation_pin": { "type": ["object", "null"] },
+    "codes": { "type": "array", "uniqueItems": true, "items": { "type": "string" } },
+    "release_authority": { "const": "VERIFIED_RELEASE" },
+    "activation_authority": { "const": "MEASURED_RELEASE_BOUND_INSTALLATION" },
+    "operating_system_authority": { "const": "NONE" },
+    "installer_authority": { "const": "NONE" },
+    "app_store_authority": { "const": "NONE" },
+    "storage_authority": { "const": "NONE" },
+    "transport_authority": { "const": "NONE" },
+    "material_truth": { "const": "NOT_EVALUATED" }
+  },
+  "$defs": {
+    "digest": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "nullableDigest": { "oneOf": [{ "$ref": "#/$defs/digest" }, { "type": "null" }] }
+  }
+}

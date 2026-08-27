@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://arv.example/schemas/arv-v1/verifier-quarantine-state.schema.json",
+  "title": "ARV Verifier Quarantine State V1",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema", "schema_version", "state_id", "verifier_id", "instance_id", "generation", "status", "incident_sequence", "incident_hash", "decision_hash", "effective_at", "previous_state_hash"],
+  "properties": {
+    "schema": {"const": "arv.verifier-quarantine-state"}, "schema_version": {"const": 1},
+    "state_id": {"type": "string", "pattern": "^ARV-QUARANTINE-STATE-[A-Z0-9-]+$"},
+    "verifier_id": {"type": "string", "pattern": "^ARV-VERIFIER-[A-Z0-9-]+$"},
+    "instance_id": {"type": "string", "pattern": "^ARV-VERIFIER-INSTANCE-[A-Z0-9-]+$"},
+    "generation": {"type": "integer", "minimum": 1}, "status": {"enum": ["CLEAR", "QUARANTINED"]},
+    "incident_sequence": {"type": "integer", "minimum": 1}, "incident_hash": {"$ref": "#/$defs/digest"},
+    "decision_hash": {"$ref": "#/$defs/digest"}, "effective_at": {"type": "string", "format": "date-time"},
+    "previous_state_hash": {"$ref": "#/$defs/nullableDigest"}
+  },
+  "$defs": {"digest": {"type": "string", "pattern": "^[a-f0-9]{64}$"}, "nullableDigest": {"oneOf": [{"$ref": "#/$defs/digest"}, {"type": "null"}]}}
+}

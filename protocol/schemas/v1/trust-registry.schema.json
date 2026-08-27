@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:arv:schema:trust-registry:v1",
+  "title": "ARV TrustRegistryV1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "schema_version",
+    "registry_id",
+    "sequence",
+    "issued_at",
+    "previous_registry_hash",
+    "authorizations",
+    "signature"
+  ],
+  "properties": {
+    "schema": { "const": "arv.trust-registry" },
+    "schema_version": { "const": 1 },
+    "registry_id": { "type": "string", "pattern": "^ARV-TRUST-[A-Z0-9-]+$" },
+    "sequence": { "type": "integer", "minimum": 1 },
+    "issued_at": { "type": "string", "format": "date-time" },
+    "previous_registry_hash": {
+      "type": ["string", "null"],
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "authorizations": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/authorization" }
+    },
+    "signature": { "$ref": "#/$defs/signature" }
+  },
+  "$defs": {
+    "authorization": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "authorization_id",
+        "issuer_id",
+        "authority",
+        "systems",
+        "roles",
+        "products",
+        "environment",
+        "key_fingerprint",
+        "valid_from",
+        "valid_until",
+        "status",
+        "status_effective_at",
+        "compromise_effective_from"
+      ],
+      "properties": {
+        "authorization_id": { "type": "string", "pattern": "^ARV-AUTH-[A-Z0-9-]+$" },
+        "issuer_id": { "type": "string", "pattern": "^ARV-ISSUER-[A-Z0-9-]+$" },
+        "authority": { "type": "string", "minLength": 1 },
+        "systems": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "roles": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "enum": ["ISSUER", "VERIFIER"] }
+        },
+        "products": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "enum": ["ARV_SNAP", "ARV_PROOF_OSS", "PROOFOPS", "GENERIC"] }
+        },
+        "environment": { "enum": ["PRODUCTION", "TEST"] },
+        "key_fingerprint": { "type": "string", "pattern": "^[a-f0-9]{24}$" },
+        "valid_from": { "type": "string", "format": "date-time" },
+        "valid_until": { "type": ["string", "null"], "format": "date-time" },
+        "status": { "enum": ["ACTIVE", "SUSPENDED", "REVOKED"] },
+        "status_effective_at": { "type": ["string", "null"], "format": "date-time" },
+        "compromise_effective_from": { "type": ["string", "null"], "format": "date-time" }
+      }
+    },
+    "signature": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["algorithm", "key_fingerprint", "value"],
+      "properties": {
+        "algorithm": { "const": "Ed25519" },
+        "key_fingerprint": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "value": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}

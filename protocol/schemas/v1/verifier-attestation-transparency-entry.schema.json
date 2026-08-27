@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://arv.example/schemas/arv-v1/verifier-attestation-transparency-entry.schema.json",
+  "title": "ARV Verifier Attestation Transparency Entry V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "schema_version", "entry_id", "log_id", "leaf_index", "verifier_id", "instance_id", "attestation_sequence", "attestation_hash", "security_event_chain_hash", "disclosure_digest", "evidence_commitment", "submitted_at"],
+  "properties": {
+    "schema": {"const": "arv.verifier-attestation-transparency-entry"},
+    "schema_version": {"const": 1},
+    "entry_id": {"type": "string", "pattern": "^ARV-ATTESTATION-TRANSPARENCY-ENTRY-[A-Z0-9-]+$"},
+    "log_id": {"type": "string", "pattern": "^ARV-ATTESTATION-TRANSPARENCY-LOG-[A-Z0-9-]+$"},
+    "leaf_index": {"type": "integer", "minimum": 0},
+    "verifier_id": {"type": "string", "pattern": "^ARV-VERIFIER-[A-Z0-9-]+$"},
+    "instance_id": {"type": "string", "pattern": "^ARV-VERIFIER-INSTANCE-[A-Z0-9-]+$"},
+    "attestation_sequence": {"type": "integer", "minimum": 1},
+    "attestation_hash": {"$ref": "#/$defs/digest"},
+    "security_event_chain_hash": {"$ref": "#/$defs/digest"},
+    "disclosure_digest": {"$ref": "#/$defs/digest"},
+    "evidence_commitment": {"$ref": "#/$defs/digest"},
+    "submitted_at": {"type": "string", "format": "date-time"}
+  },
+  "$defs": {"digest": {"type": "string", "pattern": "^[a-f0-9]{64}$"}}
+}

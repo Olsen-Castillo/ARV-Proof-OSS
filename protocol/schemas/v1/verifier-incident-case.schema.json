@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://arv.example/schemas/arv-v1/verifier-incident-case.schema.json",
+  "title": "ARV Verifier Incident Case V1",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema", "schema_version", "incident_id", "verifier_id", "instance_id", "incident_sequence", "incident_type", "severity", "trigger_state", "trigger_transparency_hash", "trigger_checkpoint_hash", "trigger_evidence_digest", "opened_at", "previous_incident_hash"],
+  "properties": {
+    "schema": {"const": "arv.verifier-incident-case"}, "schema_version": {"const": 1},
+    "incident_id": {"type": "string", "pattern": "^ARV-INCIDENT-[A-Z0-9-]+$"},
+    "verifier_id": {"type": "string", "pattern": "^ARV-VERIFIER-[A-Z0-9-]+$"},
+    "instance_id": {"type": "string", "pattern": "^ARV-VERIFIER-INSTANCE-[A-Z0-9-]+$"},
+    "incident_sequence": {"type": "integer", "minimum": 1},
+    "incident_type": {"enum": ["ATTESTATION_FAILURE", "EVENT_CHAIN_FAILURE", "GAP", "RUNTIME_DRIFT", "ROLLBACK", "SPLIT_VIEW", "TRANSPARENCY_FAILURE", "EQUIVOCATION"]},
+    "severity": {"enum": ["CRITICAL", "HIGH", "MEDIUM", "LOW"]},
+    "trigger_state": {"type": "string", "minLength": 1},
+    "trigger_transparency_hash": {"$ref": "#/$defs/digest"},
+    "trigger_checkpoint_hash": {"$ref": "#/$defs/nullableDigest"},
+    "trigger_evidence_digest": {"$ref": "#/$defs/digest"},
+    "opened_at": {"type": "string", "format": "date-time"},
+    "previous_incident_hash": {"$ref": "#/$defs/nullableDigest"}
+  },
+  "$defs": {"digest": {"type": "string", "pattern": "^[a-f0-9]{64}$"}, "nullableDigest": {"oneOf": [{"$ref": "#/$defs/digest"}, {"type": "null"}]}}
+}

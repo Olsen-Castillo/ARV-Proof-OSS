@@ -1,0 +1,87 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://raw.githubusercontent.com/Olsen-Castillo/ARV-Proof-OSS/main/protocol/schemas/v1/forensic-collision-manifest.schema.json",
+  "title": "ARV Forensic Collision Manifest V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "schema_version",
+    "validation_id",
+    "classification",
+    "resolution_state",
+    "canonical_variant",
+    "variants",
+    "ledgers",
+    "policy"
+  ],
+  "properties": {
+    "schema": { "const": "arv.forensic-collision-manifest" },
+    "schema_version": { "const": 1 },
+    "validation_id": { "type": "string" },
+    "classification": {
+      "const": "SAME_VALIDATION_ID_DIFFERENT_ARTIFACT_DIGEST_AND_TIMESTAMP"
+    },
+    "resolution_state": { "const": "UNRESOLVED_PRESERVED" },
+    "canonical_variant": { "type": "null" },
+    "variants": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "location",
+          "record_sha256",
+          "document_sha256",
+          "timestamp_utc",
+          "signature_present",
+          "merkle_root_present",
+          "ledger_entry_count",
+          "source_artifact_digest_match"
+        ],
+        "properties": {
+          "location": { "type": "string" },
+          "record_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+          "document_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+          "timestamp_utc": { "type": "string", "format": "date-time" },
+          "signature_present": { "type": "boolean" },
+          "merkle_root_present": { "type": "boolean" },
+          "ledger_entry_count": { "const": 0 },
+          "source_artifact_digest_match": { "type": "boolean" }
+        }
+      }
+    },
+    "ledgers": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["data_sha256", "public_sha256", "mirror", "contained_ids"],
+      "properties": {
+        "data_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "public_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "mirror": { "const": true },
+        "contained_ids": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "preserve_both",
+        "overwrite_allowed",
+        "delete_allowed",
+        "active_demo_allowed"
+      ],
+      "properties": {
+        "preserve_both": { "const": true },
+        "overwrite_allowed": { "const": false },
+        "delete_allowed": { "const": false },
+        "active_demo_allowed": { "const": false }
+      }
+    }
+  }
+}

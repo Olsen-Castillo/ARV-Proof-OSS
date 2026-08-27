@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:arv:schema:trust-root-verification:v1",
+  "title": "ARV Official Trust Root Verification V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "schema_version",
+    "accepted",
+    "state",
+    "current_root_hash",
+    "successor_root_hash",
+    "trusted_root_version",
+    "codes",
+    "material_truth"
+  ],
+  "properties": {
+    "schema": { "const": "arv.trust-root-verification" },
+    "schema_version": { "const": 1 },
+    "accepted": { "type": "boolean" },
+    "state": {
+      "enum": [
+        "ROOT_VALID",
+        "ROOT_EXPIRED",
+        "ROOT_ROLLBACK",
+        "ROOT_EQUIVOCATION",
+        "INSUFFICIENT_THRESHOLD",
+        "UNTRUSTED_SUCCESSOR",
+        "COMPROMISE_RECOVERY_REQUIRED",
+        "RECOVERY_VALID",
+        "ROOT_INVALID"
+      ]
+    },
+    "current_root_hash": {
+      "oneOf": [{ "type": "null" }, { "type": "string", "pattern": "^[a-f0-9]{64}$" }]
+    },
+    "successor_root_hash": {
+      "oneOf": [{ "type": "null" }, { "type": "string", "pattern": "^[a-f0-9]{64}$" }]
+    },
+    "trusted_root_version": {
+      "oneOf": [{ "type": "null" }, { "type": "integer", "minimum": 1 }]
+    },
+    "codes": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "ROOT_SCHEMA_INVALID",
+          "TRANSITION_SCHEMA_INVALID",
+          "CHECKPOINT_INVALID",
+          "ROOT_EXPIRED_AT_EVALUATION",
+          "ROOT_VERSION_ROLLBACK",
+          "ROOT_EPOCH_ROLLBACK",
+          "ROOT_EQUIVOCATION_DETECTED",
+          "ROOT_CHAIN_GAP",
+          "ROOT_CHAIN_MISMATCH",
+          "TRANSITION_HASH_MISMATCH",
+          "TRANSITION_TIME_INVALID",
+          "CURRENT_THRESHOLD_NOT_MET",
+          "RECOVERY_THRESHOLD_NOT_MET",
+          "SUCCESSOR_THRESHOLD_NOT_MET",
+          "COMPROMISE_EFFECTIVE_FROM_REQUIRED",
+          "SIGNATURE_INVALID",
+          "PRIVATE_KEY_MATERIAL_FORBIDDEN"
+        ]
+      }
+    },
+    "material_truth": { "const": "NOT_EVALUATED" }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "accepted": { "const": true } }, "required": ["accepted"] },
+      "then": {
+        "properties": {
+          "state": { "enum": ["ROOT_VALID", "RECOVERY_VALID"] },
+          "trusted_root_version": { "type": "integer" }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "accepted": { "const": false } }, "required": ["accepted"] },
+      "then": { "properties": { "trusted_root_version": { "type": "null" } } }
+    }
+  ]
+}

@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:arv:schema:verification-result:v1",
+  "title": "ARV VerificationResultV1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "schema_version",
+    "integrity",
+    "lifecycle",
+    "artifact_match",
+    "overall",
+    "codes"
+  ],
+  "properties": {
+    "schema": { "const": "arv.verification-result" },
+    "schema_version": { "const": 1 },
+    "integrity": {
+      "enum": ["VERIFIED", "FAILED", "INDETERMINATE"]
+    },
+    "lifecycle": {
+      "enum": ["ACTIVE", "SUPERSEDED", "REVOKED", "UNKNOWN"]
+    },
+    "artifact_match": {
+      "enum": ["MATCH", "MISMATCH", "NOT_CHECKED"]
+    },
+    "overall": {
+      "enum": [
+        "VERIFIED_ACTIVE",
+        "VERIFIED_HISTORICAL",
+        "FAILED",
+        "INDETERMINATE"
+      ]
+    },
+    "codes": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "SCHEMA_INVALID",
+          "VERSION_UNSUPPORTED",
+          "FIELD_UNKNOWN",
+          "PROJECTION_DIGEST_MISMATCH",
+          "NETWORK_MISMATCH",
+          "KEY_UNKNOWN",
+          "KEY_REVOKED",
+          "KEYRING_UNAVAILABLE",
+          "SIGNATURE_INVALID",
+          "PROFILE_UNAVAILABLE",
+          "CHECKPOINT_UNAVAILABLE",
+          "PROOF_INVALID",
+          "LIFECYCLE_STATE_UNKNOWN",
+          "ARTIFACT_DIGEST_MISMATCH"
+        ]
+      }
+    }
+  },
+  "oneOf": [
+    {
+      "properties": {
+        "integrity": { "const": "VERIFIED" },
+        "lifecycle": { "const": "ACTIVE" },
+        "artifact_match": { "enum": ["MATCH", "NOT_CHECKED"] },
+        "overall": { "const": "VERIFIED_ACTIVE" }
+      }
+    },
+    {
+      "properties": {
+        "integrity": { "const": "VERIFIED" },
+        "lifecycle": { "enum": ["SUPERSEDED", "REVOKED"] },
+        "artifact_match": { "enum": ["MATCH", "NOT_CHECKED"] },
+        "overall": { "const": "VERIFIED_HISTORICAL" }
+      }
+    },
+    {
+      "properties": { "overall": { "const": "FAILED" } },
+      "anyOf": [
+        { "properties": { "integrity": { "const": "FAILED" } } },
+        { "properties": { "artifact_match": { "const": "MISMATCH" } } }
+      ]
+    },
+    {
+      "properties": {
+        "artifact_match": { "enum": ["MATCH", "NOT_CHECKED"] },
+        "overall": { "const": "INDETERMINATE" }
+      },
+      "anyOf": [
+        { "properties": { "integrity": { "const": "INDETERMINATE" } } },
+        {
+          "properties": {
+            "integrity": { "const": "VERIFIED" },
+            "lifecycle": { "const": "UNKNOWN" }
+          }
+        }
+      ]
+    }
+  ]
+}

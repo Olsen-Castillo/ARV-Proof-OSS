@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.arv.example/arv-v1/verifier-activation-pin.schema.json",
+  "title": "ARV Verifier Activation Pin V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "schema_version", "pin_id", "verifier_id", "instance_id", "generation", "activation_sequence", "release_sequence", "release_manifest_hash", "release_pin_hash", "installation_hash", "runtime_profile_hash", "runtime_baseline_hash", "activated_at", "previous_pin_hash"],
+  "properties": {
+    "schema": { "const": "arv.verifier-activation-pin" },
+    "schema_version": { "const": 1 },
+    "pin_id": { "type": "string", "pattern": "^ARV-VERIFIER-ACTIVATION-PIN-[A-Z0-9-]+$" },
+    "verifier_id": { "type": "string", "pattern": "^ARV-VERIFIER-[A-Z0-9-]+$" },
+    "instance_id": { "type": "string", "pattern": "^ARV-VERIFIER-INSTANCE-[A-Z0-9-]+$" },
+    "generation": { "type": "integer", "minimum": 1 },
+    "activation_sequence": { "type": "integer", "minimum": 1 },
+    "release_sequence": { "type": "integer", "minimum": 1 },
+    "release_manifest_hash": { "$ref": "#/$defs/digest" },
+    "release_pin_hash": { "$ref": "#/$defs/digest" },
+    "installation_hash": { "$ref": "#/$defs/digest" },
+    "runtime_profile_hash": { "$ref": "#/$defs/digest" },
+    "runtime_baseline_hash": { "$ref": "#/$defs/digest" },
+    "activated_at": { "type": "string", "format": "date-time" },
+    "previous_pin_hash": { "oneOf": [{ "$ref": "#/$defs/digest" }, { "type": "null" }] }
+  },
+  "$defs": { "digest": { "type": "string", "pattern": "^[a-f0-9]{64}$" } }
+}

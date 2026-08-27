@@ -1,0 +1,176 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://raw.githubusercontent.com/Olsen-Castillo/ARV-Proof-OSS/main/protocol/schemas/v1/evidence-envelope.schema.json",
+  "title": "ARV Domain-Neutral Evidence Envelope V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "schema_version",
+    "validation_id",
+    "profile",
+    "artifact",
+    "assertion",
+    "registration",
+    "proof"
+  ],
+  "properties": {
+    "schema": { "const": "arv.evidence-envelope" },
+    "schema_version": { "const": 1 },
+    "validation_id": { "type": "string", "pattern": "^(?:ARV-[0-9]{4}-[0-9]{6}|ARV-SM-[0-9]{4}-[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12})$" },
+    "profile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "version", "claims"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^arv\\.profile\\.[a-z0-9.-]+\\.v[1-9][0-9]*$"
+        },
+        "version": { "type": "integer", "minimum": 1 },
+        "claims": { "type": "object" }
+      }
+    },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "digest", "byte_length", "media_type"],
+      "properties": {
+        "kind": {
+          "enum": [
+            "DOCUMENT",
+            "IMAGE",
+            "VIDEO",
+            "AUDIO",
+            "DATASET",
+            "SOFTWARE",
+            "ARCHIVE",
+            "BINARY",
+            "OTHER"
+          ]
+        },
+        "digest": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["algorithm", "value"],
+          "properties": {
+            "algorithm": { "const": "SHA-256" },
+            "value": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+          }
+        },
+        "byte_length": { "type": "integer", "minimum": 0 },
+        "media_type": { "type": "string", "minLength": 1 },
+        "name": { "type": "string", "minLength": 1 }
+      }
+    },
+    "assertion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "asserted_by", "participants", "attributes"],
+      "properties": {
+        "type": { "type": "string", "pattern": "^[A-Z][A-Z0-9_]*$" },
+        "asserted_by": { "$ref": "#/definitions/entity" },
+        "subject": { "$ref": "#/definitions/entity" },
+        "participants": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["role", "entity"],
+            "properties": {
+              "role": { "type": "string", "pattern": "^[A-Z][A-Z0-9_]*$" },
+              "entity": { "$ref": "#/definitions/entity" }
+            }
+          }
+        },
+        "occurred_at": { "type": "string", "format": "date-time" },
+        "jurisdiction": { "type": "string", "minLength": 1 },
+        "attributes": { "type": "object" }
+      }
+    },
+    "registration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "recorded_at",
+        "authority",
+        "system",
+        "canon",
+        "epoch_id",
+        "ledger_position"
+      ],
+      "properties": {
+        "recorded_at": { "type": "string", "format": "date-time" },
+        "authority": { "type": "string", "minLength": 1 },
+        "system": { "type": "string", "minLength": 1 },
+        "canon": { "type": "string", "minLength": 1 },
+        "epoch_id": { "type": "string", "minLength": 1 },
+        "ledger_position": {
+          "anyOf": [
+            { "type": "integer", "minimum": 1 },
+            { "type": "null" }
+          ]
+        }
+      }
+    },
+    "proof": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["merkle_root", "signature", "dual_seal", "qr", "verification_url"],
+      "properties": {
+        "merkle_root": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "signature": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["algorithm", "value", "public_key_fingerprint"],
+          "properties": {
+            "algorithm": { "const": "Ed25519" },
+            "value": { "type": ["string", "null"] },
+            "public_key_fingerprint": { "type": ["string", "null"] }
+          }
+        },
+        "dual_seal": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["mode", "primary_seal_hash", "secondary_seal_hash"],
+          "properties": {
+            "mode": { "type": "string", "minLength": 1 },
+            "primary_seal_hash": { "type": ["string", "null"] },
+            "secondary_seal_hash": { "type": ["string", "null"] }
+          }
+        },
+        "qr": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["payload", "signed", "signature", "image_path"],
+          "properties": {
+            "payload": { "type": "string", "minLength": 1 },
+            "signed": { "type": "boolean" },
+            "signature": { "type": ["string", "null"] },
+            "image_path": { "type": "string", "pattern": "^/(?!.*\\.\\.).+$" }
+          }
+        },
+        "verification_url": { "type": "string", "format": "uri" }
+      }
+    }
+  },
+  "definitions": {
+    "entity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type"],
+      "properties": {
+        "type": { "enum": ["PERSON", "ORGANIZATION", "SYSTEM", "UNKNOWN"] },
+        "name": { "type": "string", "minLength": 1 },
+        "identifier": { "type": "string", "minLength": 1 }
+      },
+      "anyOf": [
+        { "required": ["name"] },
+        { "required": ["identifier"] },
+        {
+          "properties": { "type": { "const": "UNKNOWN" } }
+        }
+      ]
+    }
+  }
+}

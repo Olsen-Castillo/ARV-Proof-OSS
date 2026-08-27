@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://arv.example/schemas/arv-v1/verifier-attestation-transparency-monitor-observation.schema.json",
+  "title": "ARV Verifier Attestation Transparency Monitor Observation V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "schema_version", "observation_id", "monitor_id", "key_id", "log_id", "checkpoint_sequence", "tree_size", "root_hash", "checkpoint_hash", "observed_at", "signature_base64"],
+  "properties": {
+    "schema": {"const": "arv.verifier-attestation-transparency-monitor-observation"},
+    "schema_version": {"const": 1},
+    "observation_id": {"type": "string", "pattern": "^ARV-ATTESTATION-TRANSPARENCY-OBSERVATION-[A-Z0-9-]+$"},
+    "monitor_id": {"type": "string", "pattern": "^ARV-TRANSPARENCY-MONITOR-[A-Z0-9-]+$"},
+    "key_id": {"type": "string", "pattern": "^[a-f0-9]{24,128}$"},
+    "log_id": {"type": "string", "pattern": "^ARV-ATTESTATION-TRANSPARENCY-LOG-[A-Z0-9-]+$"},
+    "checkpoint_sequence": {"type": "integer", "minimum": 1},
+    "tree_size": {"type": "integer", "minimum": 1},
+    "root_hash": {"$ref": "#/$defs/digest"},
+    "checkpoint_hash": {"$ref": "#/$defs/digest"},
+    "observed_at": {"type": "string", "format": "date-time"},
+    "signature_base64": {"type": "string", "contentEncoding": "base64"}
+  },
+  "$defs": {"digest": {"type": "string", "pattern": "^[a-f0-9]{64}$"}}
+}

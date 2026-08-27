@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:arv:schema:verifier-build-attestation:v1",
+  "title": "ARV Verifier Build Attestation V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema", "schema_version", "attestation_id", "builder_key_id", "manifest_id", "manifest_hash",
+    "verifier_id", "release_sequence", "source_commit", "build_recipe_digest", "toolchain_digest",
+    "artifact_set_digest", "built_at", "signature"
+  ],
+  "properties": {
+    "schema": { "const": "arv.verifier-build-attestation" },
+    "schema_version": { "const": 1 },
+    "attestation_id": { "type": "string", "pattern": "^ARV-VERIFIER-BUILD-ATTESTATION-[A-Z0-9-]+$" },
+    "builder_key_id": { "type": "string", "pattern": "^[a-f0-9]{24}$" },
+    "manifest_id": { "type": "string", "pattern": "^ARV-VERIFIER-RELEASE-MANIFEST-[A-Z0-9-]+$" },
+    "manifest_hash": { "$ref": "#/$defs/sha256" },
+    "verifier_id": { "type": "string", "pattern": "^ARV-VERIFIER-[A-Z0-9-]+$" },
+    "release_sequence": { "type": "integer", "minimum": 1 },
+    "source_commit": { "type": "string", "pattern": "^[a-f0-9]{40}$" },
+    "build_recipe_digest": { "$ref": "#/$defs/sha256" },
+    "toolchain_digest": { "$ref": "#/$defs/sha256" },
+    "artifact_set_digest": { "$ref": "#/$defs/sha256" },
+    "built_at": { "$ref": "#/$defs/timestamp" },
+    "signature": { "$ref": "#/$defs/signature" }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "timestamp": { "type": "string", "format": "date-time", "pattern": "Z$" },
+    "signature": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["algorithm", "key_id", "signature_base64"],
+      "properties": {
+        "algorithm": { "const": "Ed25519" },
+        "key_id": { "type": "string", "pattern": "^[a-f0-9]{24}$" },
+        "signature_base64": { "type": "string", "minLength": 86 }
+      }
+    }
+  }
+}

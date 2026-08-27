@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:arv:schema:trust-root-transition:v1",
+  "title": "ARV Official Trust Root Transition V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "schema_version",
+    "transition_id",
+    "transition_type",
+    "from_root_id",
+    "from_version",
+    "from_root_hash",
+    "to_root_id",
+    "to_version",
+    "to_root_hash",
+    "effective_at",
+    "compromise_effective_from",
+    "reason_code",
+    "current_authorizations",
+    "successor_authorizations"
+  ],
+  "properties": {
+    "schema": { "const": "arv.trust-root-transition" },
+    "schema_version": { "const": 1 },
+    "transition_id": { "type": "string", "pattern": "^ARV-ROOT-TRANSITION-[A-Z0-9-]+$" },
+    "transition_type": { "enum": ["ROTATION", "RECOVERY"] },
+    "from_root_id": { "type": "string", "pattern": "^ARV-ROOT-[A-Z0-9-]+$" },
+    "from_version": { "type": "integer", "minimum": 1 },
+    "from_root_hash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "to_root_id": { "type": "string", "pattern": "^ARV-ROOT-[A-Z0-9-]+$" },
+    "to_version": { "type": "integer", "minimum": 2 },
+    "to_root_hash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "effective_at": { "type": "string", "format": "date-time", "pattern": "Z$" },
+    "compromise_effective_from": {
+      "oneOf": [
+        { "type": "null" },
+        { "type": "string", "format": "date-time", "pattern": "Z$" }
+      ]
+    },
+    "reason_code": { "type": "string", "pattern": "^[A-Z][A-Z0-9_]{2,63}$" },
+    "current_authorizations": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/signature" }
+    },
+    "successor_authorizations": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/signature" }
+    }
+  },
+  "$defs": {
+    "signature": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["algorithm", "key_id", "signature_base64"],
+      "properties": {
+        "algorithm": { "const": "Ed25519" },
+        "key_id": { "type": "string", "pattern": "^[a-f0-9]{24}$" },
+        "signature_base64": { "type": "string", "minLength": 1 }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "transition_type": { "const": "ROTATION" } },
+        "required": ["transition_type"]
+      },
+      "then": {
+        "properties": { "compromise_effective_from": { "type": "null" } }
+      }
+    },
+    {
+      "if": {
+        "properties": { "transition_type": { "const": "RECOVERY" } },
+        "required": ["transition_type"]
+      },
+      "then": {
+        "properties": { "compromise_effective_from": { "type": "string" } }
+      }
+    }
+  ]
+}
