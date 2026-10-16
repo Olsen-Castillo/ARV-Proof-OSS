@@ -2,7 +2,9 @@
 
 Domain-neutral cryptographic proof and verification infrastructure for portable evidence, provenance, chain of custody, and independent verification.
 
-**Version:** 0.2.1
+**Candidate:** 0.2.2-rc.1
+
+**Latest published release:** 0.2.1
 
 **Status:** pre-1.0 public reference implementation. Interfaces and protocol contracts may evolve before v1.0.
 
@@ -39,15 +41,11 @@ A valid hash, signature, manifest, envelope, or trust result does not by itself 
 
 Integrity, provenance, cryptographic validity, governance authorization, official status, and material truth are separate determinations.
 
-## ARV architecture
+## Public scope
 
-The wider ARV architecture distinguishes three layers:
+This repository publishes the ARV Proof protocol, reference verification code, and native self-managed Snap LOCAL_L0 experience. Snap can preserve the bytes supplied by a file selector or camera capture; it does not establish the provenance or truth of the depicted event.
 
-1. **ARV Snap** - capture and provenance at or near the event.
-2. **ARV Proof OSS** - portable cryptographic proof and independent verification.
-3. **ProofOps** - operational event chains, execution evidence, provenance, handoffs, and chain of custody.
-
-This repository implements the open ARV Proof OSS layer. It does not distribute managed official issuance, private ARV signing keys, managed customer evidence, or proprietary service infrastructure.
+The published files do not distribute managed official issuance, operational signing keys, customer evidence, or non-public service implementations.
 
 ## Quick start
 
@@ -126,3 +124,7 @@ Do not publish vulnerability details, real private keys, credentials, or confide
 
 See `SECURITY.md`.
 
+
+## Native Snap local verification
+
+The [standalone local Snap page](portal/snap-verifier.html) creates self-managed LOCAL_L0 V2 packages from selected or captured bytes and verifies LOCAL_L0 V1 image packages and V2 original file bytes using only public reference source. Creation and verification run locally with no upload. See the [build and use guide](portal/SNAP.md), [package contract](protocol/snap-local-proof.md), [schema](protocol/schemas/v1/snap-local-proof.schema.json), and [synthetic vectors](protocol/test-vectors/snap/). `npm run build:snap` regenerates the public browser output; `npm run ci` checks build reproducibility and the public boundary before tests. PASS establishes local integrity for the included key; it does not establish trusted identity, official ARV status, or material truth. Browser support and device limits are documented in the build and use guide.

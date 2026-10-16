@@ -1,13 +1,14 @@
-# ARV Brand Architecture
+# ARV Proof OSS Brand Guidance
 
-## Canonical roles
+## Public identities
 
 | Identity | Role |
 | --- | --- |
-| ARV | Umbrella evidence architecture |
-| ARV Snap | Capture and provenance layer |
+| ARV | Project identity |
+| ARV Snap | Native self-managed LOCAL_L0 capture and verification experience |
 | ARV Proof OSS | Domain-neutral cryptographic proof and verification layer |
-| ProofOps | Operational event-chain, execution-proof, provenance, handoff, and chain-of-custody layer |
+
+These descriptions cover the published repository only. Local capture commits to supplied bytes; it does not authenticate a person, camera, scene, or capture time.
 
 ## Required distinctions
 
